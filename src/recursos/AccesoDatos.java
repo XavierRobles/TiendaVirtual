@@ -33,7 +33,7 @@ public class AccesoDatos {
 
 	}
 
-	public static ArrayList<Almacen> obtenerstock() {
+	public static ArrayList<Almacen> obtenerStock() {
 		try {
 			Connection c = DriverManager.getConnection("jdbc:mysql://localhost:3306/tiendaexamen", "root", null);
 			Statement stmt = c.createStatement();
@@ -46,6 +46,30 @@ public class AccesoDatos {
 				stock.setNombre(rst.getString(1));
 				stock.setPrecio(rst.getInt(2));
 				stock.setCantidad(rst.getInt(3));
+				lista.add(stock);
+
+			}
+			return lista;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	public static ArrayList<Clientes> obtenerClientes() {
+		try {
+			Connection c = DriverManager.getConnection("jdbc:mysql://localhost:3306/tiendaexamen", "root", null);
+			Statement stmt = c.createStatement();
+			String query = "SELECT * FROM clientes";
+			ResultSet rst = stmt.executeQuery(query);
+
+			ArrayList<Clientes> lista = new ArrayList<Clientes>();
+			while (rst.next()) {
+				Clientes stock = new Clientes();
+				stock.setNombre(rst.getString(1));
+				stock.setSaldo(rst.getInt(2));
 				lista.add(stock);
 
 			}
@@ -79,7 +103,7 @@ public class AccesoDatos {
 		try {
 			Connection c = DriverManager.getConnection("jdbc:mysql://localhost:3306/tiendaexamen", "root", null);
 			Statement stmt = c.createStatement();
-			int saldofinal = cliente.getSaldo() - stock.get(comprado).getPrecio();
+			int saldofinal = mostrarSaldo(cliente.getNombre()) - stock.get(comprado).getPrecio();
 			String query = "UPDATE clientes SET saldo = " + saldofinal + " WHERE nombre ='" + cliente.getNombre() + "'";
 			int rst = stmt.executeUpdate(query);
 
@@ -105,4 +129,31 @@ public class AccesoDatos {
 		return 0;
 
 	}
+	
+	public static void resetearBaseDeDatosClientes() {
+		try {
+			Connection c = DriverManager.getConnection("jdbc:mysql://localhost:3306/tiendaexamen", "root", null);
+			Statement stmt = c.createStatement();
+			String query = "UPDATE clientes SET saldo = 1200";
+			int rst = stmt.executeUpdate(query);
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void resetearBaseDeDatosAlmacen() {
+		try {
+			Connection c = DriverManager.getConnection("jdbc:mysql://localhost:3306/tiendaexamen", "root", null);
+			Statement stmt = c.createStatement();
+			String query = "UPDATE almacen SET cantidad = 20";
+			int rst = stmt.executeUpdate(query);
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 }

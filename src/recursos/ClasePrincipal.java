@@ -15,15 +15,20 @@ public class ClasePrincipal {
 		while (opcion != EntradaSalida.SALIR) {
 			switch (opcion) {
 			case EntradaSalida.COMPRAR:
-				ArrayList<Almacen> stock = AccesoDatos.obtenerstock();
+				ArrayList<Almacen> stock = AccesoDatos.obtenerStock();
 				int comprado = EntradaSalida.MostrarAlmacen(stock);
-				if (cliente.getSaldo() < stock.get(comprado).getPrecio()) {
+				if (AccesoDatos.mostrarSaldo(cliente.getNombre()) < stock.get(comprado).getPrecio()) {
 					System.err.println("Saldo insuficiente");
 
 				} else {
+					
 					AccesoDatos.borrarObjeto(comprado, stock);
 					AccesoDatos.cambiarSaldo(cliente, comprado, stock);
 					cliente.getCarrito().add(stock.get(comprado));
+					
+					
+					int saldo = AccesoDatos.mostrarSaldo(nombre);
+					EntradaSalida.mostrarSaldo(saldo);
 
 				}
 
@@ -37,7 +42,18 @@ public class ClasePrincipal {
 
 				break;
 			case EntradaSalida.CSV:
+				AccesoFiechero.copiaSeguridad();
 
+				break;
+			case EntradaSalida.RESET:
+				Boolean restablecer = EntradaSalida.resetearBBDD();
+				if (restablecer) {
+					AccesoDatos.resetearBaseDeDatosClientes();
+					AccesoDatos.resetearBaseDeDatosAlmacen();
+					
+				}
+				
+				
 				break;
 			case EntradaSalida.SALIR:
 	
